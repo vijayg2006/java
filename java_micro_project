@@ -1,0 +1,119 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Vehicle {
+    private String licensePlate;
+    private String type;
+
+    public Vehicle(String licensePlate, String type) {
+        this.licensePlate = licensePlate;
+        this.type = type;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle [License Plate: " + licensePlate + ", Type: " + type + "]";
+    }
+}
+
+class ParkingLot {
+    private ArrayList<Vehicle> parkedVehicles;
+    private int capacity;
+
+    public ParkingLot(int capacity) {
+        this.capacity = capacity;
+        this.parkedVehicles = new ArrayList<>();
+    }
+
+    public boolean parkVehicle(Vehicle vehicle) {
+        if (parkedVehicles.size() < capacity) {
+            parkedVehicles.add(vehicle);
+            System.out.println("Vehicle parked successfully: " + vehicle);
+            return true;
+        } else {
+            System.out.println("Parking lot is full. Cannot park vehicle: " + vehicle);
+            return false;
+        }
+    }
+
+    public boolean removeVehicle(String licensePlate) {
+        for (Vehicle vehicle : parkedVehicles) {
+            if (vehicle.getLicensePlate().equals(licensePlate)) {
+                parkedVehicles.remove(vehicle);
+                System.out.println("Vehicle removed successfully: " + vehicle);
+                return true;
+            }
+        }
+        System.out.println("Vehicle with license plate " + licensePlate + " not found.");
+        return false;
+    }
+
+    public void displayParkedVehicles() {
+        if (parkedVehicles.isEmpty()) {
+            System.out.println("No vehicles are currently parked.");
+        } else {
+            System.out.println("Parked Vehicles:");
+            for (Vehicle vehicle : parkedVehicles) {
+                System.out.println(vehicle);
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the capacity of the parking lot:");
+        int capacity = scanner.nextInt();
+        scanner.nextLine();
+        
+        ParkingLot parkingLot = new ParkingLot(capacity);
+        
+        boolean running = true;
+        while (running) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Park a vehicle");
+            System.out.println("2. Remove a vehicle");
+            System.out.println("3. Display parked vehicles");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+            
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter license plate number: ");
+                    String licensePlate = scanner.nextLine();
+                    System.out.print("Enter vehicle type (Car, Bike, etc.): ");
+                    String type = scanner.nextLine();
+                    Vehicle vehicle = new Vehicle(licensePlate, type);
+                    parkingLot.parkVehicle(vehicle);
+                    break;
+                case 2:
+                    System.out.print("Enter license plate number of vehicle to remove: ");
+                    String plateToRemove = scanner.nextLine();
+                    parkingLot.removeVehicle(plateToRemove);
+                    break;
+                case 3:
+                    parkingLot.displayParkedVehicles();
+                    break;
+                case 4:
+                    running = false;
+                    System.out.println("Exiting the parking system. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        scanner.close();
+    }
+}
